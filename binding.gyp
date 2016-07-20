@@ -9,6 +9,9 @@
         "irf/MurmurHash3.h",
         "irf/MurmurHash3.cpp"
       ],
+      "include_dirs" : [
+        "<!(node -e \"require('nan')\")"
+      ],
       'cflags': [ '<!@(pkg-config --cflags libsparsehash)' ],
       'conditions': [
         [ 'OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="solaris"', {
@@ -17,6 +20,8 @@
         }],
         ['OS=="mac"', {
           'xcode_settings': {
+            "OTHER_CPLUSPLUSFLAGS" : ["-std=c++11","-mmacosx-version-min=10.5"],
+            "OTHER_LDFLAGS": ["-std=c++11"],
             'GCC_ENABLE_CPP_RTTI': 'YES',
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
           }

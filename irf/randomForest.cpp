@@ -21,10 +21,10 @@
 
 #include <limits>
 
-#include <google/sparse_hash_map>
+//#include <google/sparse_hash_map>
 
 using namespace std;
-using google::sparse_hash_map;
+//using google::map;
 
 
 namespace IncrementalRandomForest {
@@ -159,11 +159,11 @@ namespace IncrementalRandomForest {
     int code; // iff code == -1 it's a leaf node
     unsigned int c0;
     unsigned int c1;
-    sparse_hash_map<int, DecisionCounts> decisionCountMap;
+    map<int, DecisionCounts> decisionCountMap;
     unsigned long id;
     pair<CodeRankType, int> minValidRank;
     DecisionTreeNode() : decisionCountMap() {
-      decisionCountMap.set_deleted_key(-1);
+      //decisionCountMap.set_deleted_key(-1);
       minValidRank = make_pair(0U, 0);
     }
     DecisionTreeInternal* checkInternal(void);
@@ -295,13 +295,13 @@ namespace IncrementalRandomForest {
 
   static void computeDecisionCounters(DecisionTreeNode* dt,
                                       const TreeSampleWalker& origSW,
-                                      sparse_hash_map<int, DecisionCounts>& decisionCountMap,
+                                      map<int, DecisionCounts>& decisionCountMap,
                                       unsigned int& outC0,
                                       unsigned int& outC1,
                                       pair<CodeRankType, int>& minValidRank);
 
-  static pair<CodeRankType, int> findMinRankToConsider(const sparse_hash_map<int, DecisionCounts>& dcMap) {
-    sparse_hash_map<int, DecisionCounts>::const_iterator mapIt;
+  static pair<CodeRankType, int> findMinRankToConsider(const map<int, DecisionCounts>& dcMap) {
+    map<int, DecisionCounts>::const_iterator mapIt;
     pair<CodeRankType, int> minRankToConsider;
     minRankToConsider.first = 0; minRankToConsider.second = 0; // FIXME: is this necessary?
     if(dcMap.size() > maxCodesToConsider) {
@@ -320,7 +320,7 @@ namespace IncrementalRandomForest {
     float minEntropy = 10;
     int minEntropyCode = -1;
 
-    sparse_hash_map<int, DecisionCounts>::const_iterator mapIt;
+    map<int, DecisionCounts>::const_iterator mapIt;
 
     // FIXME: this is possibly too inneficient. keep DCs sorted by rank in a vector instead?
     pair<CodeRankType, int> minRankToConsider = findMinRankToConsider(dt->decisionCountMap);
@@ -421,7 +421,7 @@ namespace IncrementalRandomForest {
 
   static void computeDecisionCounters(DecisionTreeNode* dt,
                                       const TreeSampleWalker& origSW,
-                                      sparse_hash_map<int, DecisionCounts>& decisionCountMap,
+                                      map<int, DecisionCounts>& decisionCountMap,
                                       unsigned int& outC0,
                                       unsigned int& outC1,
                                       pair<CodeRankType, int>& minValidRank) {
@@ -541,7 +541,7 @@ namespace IncrementalRandomForest {
   }
 
   static void updateDecisionCounters(DecisionTreeNode* dt, Sample* s, int addedBefore0, int addedBefore1, int direction = 1) {
-    sparse_hash_map<int, DecisionCounts>::iterator dcIt;
+    map<int, DecisionCounts>::iterator dcIt;
     for(dcIt = dt->decisionCountMap.begin(); dcIt != dt->decisionCountMap.end();) {
       const int code = dcIt->first;
       DecisionCounts& dc = dcIt->second;
@@ -562,7 +562,7 @@ namespace IncrementalRandomForest {
       }
 
       if(direction < 0 && dc.c0p == 0 && dc.c1p == 0) {
-        sparse_hash_map<int, DecisionCounts>::iterator toErase = dcIt;
+        map<int, DecisionCounts>::iterator toErase = dcIt;
         ++dcIt;
         dt->decisionCountMap.erase(toErase);
       } else
@@ -579,7 +579,7 @@ namespace IncrementalRandomForest {
 
     map<int, float>::const_iterator codeIt;
     for(codeIt = s->xCodes.begin(); codeIt != s->xCodes.end(); ++codeIt) {
-      sparse_hash_map<int, DecisionCounts>::iterator dcIt = dt->decisionCountMap.find(codeIt->first);
+      map<int, DecisionCounts>::iterator dcIt = dt->decisionCountMap.find(codeIt->first);
       if(dcIt == dt->decisionCountMap.end()) {
 
         CodeRankType newRank = codeRankInNode(codeIt->first, dt->id);
@@ -614,9 +614,9 @@ namespace IncrementalRandomForest {
     }
   }
 
-  static void printDCs(const sparse_hash_map<int, DecisionCounts>& dc, DecisionTreeNode* dt) {
+  static void printDCs(const map<int, DecisionCounts>& dc, DecisionTreeNode* dt) {
     set<pair<CodeRankType, int> > ranks;
-    sparse_hash_map<int, DecisionCounts>::const_iterator it;
+    map<int, DecisionCounts>::const_iterator it;
     for(it = dc.begin(); it != dc.end(); ++it) {
       ranks.insert(make_pair(it->second.rank, it->first));
     }
@@ -633,8 +633,8 @@ namespace IncrementalRandomForest {
     }
   }
 
-  static bool compareDCsDir(const sparse_hash_map<int, DecisionCounts>& dcM1,
-                            const sparse_hash_map<int, DecisionCounts>& dcM2,
+  static bool compareDCsDir(const map<int, DecisionCounts>& dcM1,
+                            const map<int, DecisionCounts>& dcM2,
                             DecisionTreeNode* dt,
                             const char* tag1,
                             const char* tag2) {
@@ -643,7 +643,7 @@ namespace IncrementalRandomForest {
     pair<CodeRankType, int> minR1 = findMinRankToConsider(dcM1);
     pair<CodeRankType, int> minR2 = findMinRankToConsider(dcM2);
 
-    sparse_hash_map<int, DecisionCounts>::const_iterator itDC;
+    map<int, DecisionCounts>::const_iterator itDC;
 
     int countIn = 0;
     for(itDC = dcM1.begin(); itDC != dcM1.end(); ++itDC) {
@@ -652,7 +652,7 @@ namespace IncrementalRandomForest {
 
       if(make_pair(dc.rank, code) >= minR1) {
         ++countIn;
-        sparse_hash_map<int, DecisionCounts>::const_iterator itDC2 = dcM2.find(code);
+        map<int, DecisionCounts>::const_iterator itDC2 = dcM2.find(code);
         if(itDC2 == dcM2.end()) {
           if(!dc.isZeroFor(dt)) {
             cerr << "ERROR: non-zero DC for code " << code << " not found: (" << tag1 << " in " << tag2 << ") in " << (long)dt << " : " << endl;
@@ -689,8 +689,8 @@ namespace IncrementalRandomForest {
     return valid;
   }
 
-  static bool compareDCs(const sparse_hash_map<int, DecisionCounts>& dcM1,
-                         const sparse_hash_map<int, DecisionCounts>& dcM2,
+  static bool compareDCs(const map<int, DecisionCounts>& dcM1,
+                         const map<int, DecisionCounts>& dcM2,
                          DecisionTreeNode* dt,
                          const char* tag1,
                          const char* tag2) {
@@ -773,7 +773,7 @@ namespace IncrementalRandomForest {
       }
     }
 
-    sparse_hash_map<int, DecisionCounts>::const_iterator itDC;
+    map<int, DecisionCounts>::const_iterator itDC;
     for(itDC = dt->decisionCountMap.begin(); itDC != dt->decisionCountMap.end(); ++itDC) {
       const DecisionCounts& dc = itDC->second;
 
@@ -811,7 +811,7 @@ namespace IncrementalRandomForest {
     // validate counters against samples
 
     {
-      sparse_hash_map<int, DecisionCounts> computedDCs;
+      map<int, DecisionCounts> computedDCs;
       unsigned int computedC0, computedC1;
       pair<CodeRankType, int> computedMinValidRank;
 
@@ -840,7 +840,7 @@ namespace IncrementalRandomForest {
 
     if(ni) {
 
-      sparse_hash_map<int, DecisionCounts>::const_iterator itDC;
+      map<int, DecisionCounts>::const_iterator itDC;
       itDC = dt->decisionCountMap.find(dt->code);
       if(itDC != dt->decisionCountMap.end()) {
         const DecisionCounts& dc = itDC->second;
@@ -1116,7 +1116,7 @@ namespace IncrementalRandomForest {
     int countDC;
     forestS >> countDC;
 
-    n->decisionCountMap.resize(countDC);
+    //n->decisionCountMap.resize(countDC);
 
     for(int i = 0; i < countDC; ++i) {
       int code;
@@ -1161,7 +1161,7 @@ namespace IncrementalRandomForest {
     forestS << dt->minValidRank.first << " " << dt->minValidRank.second << endl;
     forestS << dt->c0 << " " << dt->c1 << endl;
     forestS << dt->decisionCountMap.size() << endl;
-    sparse_hash_map<int, DecisionCounts>::const_iterator dcIt;
+    map<int, DecisionCounts>::const_iterator dcIt;
     for(dcIt = dt->decisionCountMap.begin(); dcIt != dt->decisionCountMap.end(); ++dcIt) {
       forestS << dcIt->first << endl;
       const DecisionCounts& dc = dcIt->second;
@@ -1226,7 +1226,7 @@ namespace IncrementalRandomForest {
     outS << ",\"c1\":" << dt->c1;
 
     outS << ",\"counts\":{";
-    sparse_hash_map<int, DecisionCounts>::const_iterator mapIt;
+    map<int, DecisionCounts>::const_iterator mapIt;
     for(mapIt = dt->decisionCountMap.begin();
         mapIt != dt->decisionCountMap.end();
         ++mapIt) {
