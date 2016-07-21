@@ -1,6 +1,6 @@
 {
-  "name": "irf",
-  "version": "0.1.4",
+  "name": "node-irf",
+  "version": "0.2.0",
   "keywords": [
     "incremental",
     "random",
@@ -14,17 +14,17 @@
     "ensemble",
     "supervised"
   ],
-  "homepage": "https://github.com/pconstr/irf",
+  "homepage": "https://github.com/yjhjstz",
   "description": "incremental random forest ensemble classifier (native)",
   "main": "./index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pconstr/irf"
+    "url": "https://github.com/yjhjstz"
   },
   "engines": {
     "node": ">=0.6.0"
   },
-  "author": "Carlos Guerreiro <carlos@perceptiveconstructs.com (http://perceptiveconstructs.com)",
+  "author": "Carlos Guerreiro <carlos@perceptiveconstructs.com> & Jianghua Yang",
   "dependencies": {
     "nan": "2.4.0"
   },
@@ -38,13 +38,13 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/pconstr/irf/issues"
+    "url": "https://github.com/yjhjstz/node-irf"
   },
   "contributors": [
     {
-      "name": "Carlos Guerreiro",
-      "email": "carlos@perceptiveconstructs.com",
-      "web": "http://perceptiveconstructs.com"
+      "name": "Jianghua Yang",
+      "email": "yjhjstz@gmail.com",
+      "web": "https://alinode.aliyun.com"
     },
     {
       "name": "Carlos Guerreiro",

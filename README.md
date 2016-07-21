@@ -24,13 +24,13 @@ Features and limitations
 
 Node.js setup
 -----
-`npm install irf`
+`npm install node-irf`
 
 Node.js usage
 -------------
 
 ```javascript
-var irf = require('irf');
+var irf = require('node-irf');
 
 var f = new irf.IRF(99); // create forest of 99 trees
 
@@ -108,9 +108,6 @@ Included:
 
 * MurmurHash3 (from [smhasher](http://code.google.com/p/smhasher/))
 
-External:
-
-* [google sparse hash](http://goog-sparsehash.sourceforge.net/)
 
 
 Tests
