@@ -6,6 +6,7 @@
 #include <cmath>
 #include <ctime>
 #include <utility>
+#include <string.h>
 
 #include <map>
 #include <vector>
@@ -15,6 +16,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+
 
 #include "randomForest.h"
 #include "MurmurHash3.h"
