@@ -12,7 +12,6 @@
       "include_dirs" : [
         "<!(node -e \"require('nan')\")"
       ],
-      'cflags': [ '<!@(pkg-config --cflags libsparsehash)' ],
       'conditions': [
         [ 'OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="solaris"', {
           'cflags_cc!': ['-fno-rtti', '-fno-exceptions'],
