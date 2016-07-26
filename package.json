@@ -1,6 +1,6 @@
 {
   "name": "node-irf",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "keywords": [
     "incremental",
     "random",
@@ -19,7 +19,7 @@
   "main": "./index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yjhjstz"
+    "url": "https://github.com/yjhjstz/node-irf"
   },
   "engines": {
     "node": ">=0.6.0"
